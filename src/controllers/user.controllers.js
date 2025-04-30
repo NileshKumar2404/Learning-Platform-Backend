@@ -136,9 +136,9 @@ const logoutUser = asyncHandler(async (req, res) => {
         }
     
         return res
-        .clearcookie("accessToken", options)
-        .clearcookie("refreshToken", options)
         .status(201)
+        .clearCookie("accessToken", options)
+        .clearCookie("refreshToken", options)
         .json(new ApiResponse(
             201,
             {},
@@ -193,7 +193,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
             throw new ApiError(401, "Refresh token is expired or used")
         }
 
-        const {accessToken, refreshToken} = await user.generateAccessTokenAndRefreshToken(user._id)
+        const {accessToken, refreshToken} = await generateAccessTokenAndRefreshToken(user._id)
 
         const options = {
             httpOnly: true,
