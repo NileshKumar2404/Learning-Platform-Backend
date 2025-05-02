@@ -226,7 +226,7 @@ const updateUserDetails = asyncHandler(async (req, res) => {
             }
         },
         {new: true}
-    ).select("-password, -refreshToken")
+    ).select("-password -refreshToken")
 
     return res
     .status(201)

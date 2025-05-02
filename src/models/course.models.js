@@ -20,7 +20,7 @@ const courseSchema = new mongoose.Schema({
         required: true
     },
     modules: [{
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Module'
     }],
     category: {
@@ -28,7 +28,7 @@ const courseSchema = new mongoose.Schema({
         required: true
     },
     studentsEnrolled: [{
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     }]
 },{timestamps: true})
