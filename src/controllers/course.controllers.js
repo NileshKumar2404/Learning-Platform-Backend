@@ -137,6 +137,10 @@ const getCourseById = asyncHandler(async (req, res) => {
 const updateCourse = asyncHandler(async (req, res) => {
     const {courseId} = req.params
 
+    if(req.user.role !== "Teacher") {
+        throw new ApiError(401, "Only teachers can update courses.")
+    }
+
     const updateCourse = await Course.findByIdAndUpdate(
         courseId,
         {
@@ -214,7 +218,7 @@ const enrollCourse = asyncHandler(async (req, res) => {
         .status(201)
         .json(new ApiResponse(
             201, 
-            {},
+            {courseId: course._id, courseName: course.name},
             "Successfully enrolled in course."
         ))
     } catch (error) {
