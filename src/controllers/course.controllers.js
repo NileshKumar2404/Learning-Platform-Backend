@@ -231,7 +231,7 @@ const getMyCourses = asyncHandler(async (req, res) => {
         const userCourses = await User.aggregate([
             {
                 $match: {
-                    _id: mongoose.Types.ObjectId(req.user._id)
+                    _id: new mongoose.Types.ObjectId(req.user._id)
                 }
             },
             {
