@@ -22,8 +22,10 @@ app.use((req, res, next) => {
 
 import userRouter from "./routes/user.routes.js"
 import courseRouter from "./routes/course.routes.js"
+import moduleRouter from "./routes/module.routes.js"
 
 app.use("/api/v1/user", userRouter)
 app.use("/api/v1/course", courseRouter)
+app.use("/api/v1/module", moduleRouter)
 
 export {app}

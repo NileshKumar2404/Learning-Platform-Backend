@@ -10,11 +10,11 @@ const moduleSchema = new mongoose.Schema({
         required: true
     }],
     quizId: {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Quiz'
     },
     course: {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Course'
     },
     order: {
