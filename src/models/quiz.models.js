@@ -2,11 +2,11 @@ import mongoose from "mongoose";
 
 const quizSchema = new mongoose.Schema({
     course: {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Course'
     },
     module:{
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Module'
     },
     questions: [{
