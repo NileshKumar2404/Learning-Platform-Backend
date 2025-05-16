@@ -8,7 +8,7 @@ import mongoose from "mongoose"
 //Only for teacher
 const createCourse = asyncHandler(async (req, res) => {
     try {
-        const {name, duration, courseFees, description, category} = req.body
+        const {name, duration, courseFees, description, category, tags} = req.body
 
         if(req.user.role !== "Teacher") throw new ApiError(401, "You are not authorized to create courses");
 
@@ -21,7 +21,8 @@ const createCourse = asyncHandler(async (req, res) => {
             description,
             category,
             modules: [],
-            studentsEnrolled: []
+            studentsEnrolled: [],
+            tags
         })
 
         return res
@@ -61,6 +62,7 @@ const getAllCourses = asyncHandler(async (req, res) => {
                             $ifNull: ["$studentsEnrolled", []]
                         }
                     },
+                    tags: 1,
                     createdAt: 1
                 }
             },

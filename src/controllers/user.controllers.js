@@ -2,6 +2,7 @@ import {asyncHandler} from "../utils/asyncHandler.js"
 import {ApiError} from "../utils/ApiError.js"
 import {ApiResponse} from "../utils/ApiResponse.js"
 import {User} from "../models/user.models.js"
+import {Course} from "../models/course.models.js"
 import jwt from "jsonwebtoken"
 
 
@@ -239,11 +240,106 @@ const updateUserDetails = asyncHandler(async (req, res) => {
     ))
 })
 
+const addToFavourite = asyncHandler(async (req, res) => {
+    const {courseId} = req.body
+
+    const course = await Course.findById(courseId)
+    if(!course) throw new ApiError(401, "Course not found");
+
+    const user = await User.findByIdAndUpdate(
+        req.user._id,
+        {
+            $addToSet: {
+                favouriteCourses: courseId
+            }
+        }, 
+        {new: true}
+    )
+
+    return res
+    .status(201)
+    .json(new ApiResponse(
+        201,
+        {
+            _id: user._id, 
+            name: user.name, 
+            enrolledCourses: user.enrolledCourses, 
+            favouriteCourses: user.favouriteCourses, 
+        }, 
+        "Course added to favourite"
+    ))
+})
+
+const deleteFavourite = asyncHandler(async (req, res) => {
+    const {courseId} = req.body
+
+    const user = await User.findByIdAndUpdate(
+        req.user._id,
+        {
+            $pull: {
+                favouriteCourses: courseId
+            }
+        },
+        {new: true}
+    )
+
+    return res
+    .status(201)
+    .json(new ApiResponse(
+        201,
+        {
+            _id: user._id,
+            favouriteCourses: user.favouriteCourses
+        },
+        "Removed from favourite"
+    ))
+})
+
+const getFavourites = asyncHandler(async (req, res) => {
+    try {
+        const favourites = await User.aggregate([
+            {
+                $match: {
+                    _id: req.user._id
+                }
+            },
+            {
+                $lookup: {
+                    from: 'courses',
+                    localField: 'favouriteCourses',
+                    foreignField: '_id', 
+                    as: 'favourites'
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    favourites: 1
+                }
+            }
+        ])
+    
+        return res
+        .status(201)
+        .json(new ApiResponse(
+            201,
+            favourites,
+            "Favourites fetched successfully."
+        ))
+    } catch (error) {
+        console.error("Failed to fetch the favourites: ", error);
+        
+    }
+})
+
 export {
     registerUser,
     loginUser,
     logoutUser,
     changeCurrentPassword,
     refreshAccessToken,
-    updateUserDetails
+    updateUserDetails,
+    addToFavourite,
+    deleteFavourite,
+    getFavourites
 } 

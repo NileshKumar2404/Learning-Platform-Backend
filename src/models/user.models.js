@@ -39,7 +39,11 @@ const userSchema = new Schema({
     },
     refreshToken: {
         type: String
-    }
+    },
+    favouriteCourses: [{
+        type: Schema.Types.ObjectId, 
+        ref: 'Course'
+    }]
 }, {timestamps: true})
 
 userSchema.pre('save', async function(next) {
