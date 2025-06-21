@@ -33,10 +33,13 @@ const createModule = asyncHandler(async (req, res) => {
         const course = await Course.findById(courseId)
         if(!course) throw new ApiError(401, "Course not found.");
 
+        let finalQuizId = null
+        if(quizId && quizId.trim() !== "") finalQuizId = quizId;
+
         const createModule = await Module.create({
             title,
             videoUrl: uploadVideo.url,
-            quizId,
+            quizId: finalQuizId,
             course: courseId,
             order
         })
