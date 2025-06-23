@@ -150,9 +150,54 @@ const deleteModule = asyncHandler(async (req, res) => {
     }
 })
 
+const getAllModule = asyncHandler(async(req, res) => {
+    try {
+        if(req.user.role !== "Teacher") throw new ApiError(401, "You are not autorize to do this!!");
+        
+        const modules = await Module.aggregate([
+            {
+                $lookup: {
+                    from: "courses",
+                    localField: "course",
+                    foreignField: "_id",
+                    as: "courseDetails"
+                }
+            },
+            {
+                $unwind: {
+                    path: "$courseDetails",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $project: {
+                    title: 1,
+                    order: 1,
+                    createdAt: 1,
+                    updatedAt: 1,
+                    courseId: "$courseDetails._id",
+                    courseName: "$courseDetails.name",
+                    courseDuration: "$courseDetails.duration"
+                }
+            }
+        ])
+    
+        return res
+        .status(201)
+        .json(new ApiResponse(
+            201,
+            modules,
+            "All modules get successfully"
+        ))
+    } catch (error) {
+        console.error("Failed to get all the modules: ", error);
+    }
+})
+
 export {
     createModule,
     getModulesByCourse,
     updateModule,
-    deleteModule
+    deleteModule,
+    getAllModule
 }
