@@ -3,7 +3,6 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Quiz } from "../models/quiz.models.js";
 import {Course} from "../models/course.models.js"
-import {Module} from "../models/module.models.js"
 
 //Only teacher
 const createQuiz = asyncHandler(async (req, res) => {
@@ -150,5 +149,5 @@ export {
     createQuiz,
     getQuizModuleId,
     submitQuiz,
-    getAllQuizzes
+    getAllQuizzes,
 }
